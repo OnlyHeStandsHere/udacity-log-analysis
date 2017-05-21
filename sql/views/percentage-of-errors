@@ -1,0 +1,53 @@
+/***********************************************************
+
+     Author: Jesse Maitland
+       Date: 2017-05-20
+       Type: Create View
+Description: Returns dates that have HTTP errors that comprise of errors greater tna 1% of all requests
+  Dependant: none
+  Operation:
+      Step 1 - Count all requests per day from the log
+      Step 2 - Count all requests per day where the error code contains 4**
+      Step 3 - Calculate the error percentage
+      Step 4 - Return the table to the caller
+
+    Formula:
+      percentage_of_errors = request_count / error_count * 100
+***********************************************************/
+CREATE VIEW high_error_dates AS
+
+-- get all the requests for each day
+WITH requests AS
+  (
+      SELECT COUNT(id)          AS request_count,
+             CAST(time AS DATE) AS request_date
+        FROM log
+    GROUP BY request_date
+  ),
+
+-- get all the errors for each day
+errors AS
+  (
+      SELECT COUNT(id)          AS error_count,
+             CAST(time AS DATE) AS error_date
+        FROM log
+       WHERE status LIKE '4%'
+    GROUP BY error_date
+  ),
+
+-- calculate the error percentage using the defined formula
+percetange AS
+  (
+    SELECT CAST( CAST(e.error_count AS FLOAT) /
+                 CAST(r.request_count AS FLOAT) * 100 AS DECIMAL(6, 2))  -- float / decimal will preserve decimal places
+     AS percent_of_errors,
+     r.request_date
+FROM requests r
+     INNER JOIN errors e ON e.error_date = r.request_date
+  )
+
+-- return the table to the caller
+SELECT percent_of_errors,
+       request_date
+  FROM percetange
+ WHERE percent_of_errors > 1.0

@@ -1,0 +1,17 @@
+/***********************************************************
+
+     Author: Jesse Maitland
+       Date: 2017-05-20
+       Type: Create View
+Description: Returns the top 3 articles by view by title
+  Dependant: articles_view
+
+***********************************************************/
+CREATE VIEW article_top3 AS
+
+  SELECT a.Title  AS title,
+         av.ViewCount AS views
+    FROM Articles a
+         INNER JOIN article_views av ON av.slug = a.slug
+ORDER BY av.ViewCount DESC
+   LIMIT 3
