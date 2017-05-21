@@ -3,7 +3,7 @@
      Author: Jesse Maitland
        Date: 2017-05-20
        Type: Create View
-Description: Returns the number of article views
+Description: Creates all necessary views for
    Criteria: To be counted, the record must have method = get, and stats = 200 ok
 
 ***********************************************************/
