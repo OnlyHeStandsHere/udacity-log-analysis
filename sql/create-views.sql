@@ -5,8 +5,11 @@
        Type: Create View
 Description: Creates all necessary views for FSND Log Analysis Project
 
-***********************************************************/
+Run this file against the news database with the below command
 
+psql -d news -f create-views.sql
+
+***********************************************************/
 
 CREATE VIEW article_views AS
 
@@ -32,20 +35,11 @@ WITH cte AS (
 )
 
   SELECT RANK() OVER (ORDER BY CTE.Article_Views DESC) AS Author_Rank,
-         cte.name,
-         cte.Article_Views
+         CAST(cte.name AS CHAR(30))                    AS name,
+         'Views -- ' || cte.Article_Views              AS article_views
     FROM cte
 ORDER BY cte.Article_Views DESC;
 
-
-CREATE VIEW article_top3 AS
-
-  SELECT a.Title  AS title,
-         av.ViewCount AS views
-    FROM Articles a
-         INNER JOIN article_views av ON av.slug = a.slug
-ORDER BY av.ViewCount DESC
-   LIMIT 3;
 
 CREATE VIEW high_error_dates AS
 
@@ -80,7 +74,7 @@ FROM requests r
   )
 
 -- return the table to the caller
-SELECT percent_of_errors,
-       request_date
+SELECT CAST(percent_of_errors || '%'  AS CHAR(10)) AS percentage_of_errors,
+       'Date -- '|| request_date                   AS request_date
   FROM percetange
  WHERE percent_of_errors > 1.0;

@@ -8,7 +8,7 @@
 #       These reports are selected by a user, and are printed to the terminal and also saved as a txt file.
 #       The files are saved in the /reports directory
 #       Report file creation is destructive, as only a single report file type can exists for a given day
-#       This is because the date is used in creating the report file name. 
+#       This is because the date is used in creating the report file name.
 #
 ##################################################################################################
 
