@@ -47,7 +47,7 @@ FROM requests r
   )
 
 -- return the table to the caller
-SELECT percent_of_errors,
-       request_date
+SELECT CAST(percent_of_errors || '%'  AS CHAR(10)) AS percentage_of_errors,
+       'Date -- '|| request_date                 AS request_date
   FROM percetange
- WHERE percent_of_errors > 1.0
+ WHERE percent_of_errors > 1.0;

@@ -20,7 +20,8 @@ WITH cte AS (
 )
 
   SELECT RANK() OVER (ORDER BY CTE.Article_Views DESC) AS Author_Rank,
-         cte.name,
-         cte.Article_Views
+         CAST(cte.name AS CHAR(30))                    AS name,
+         'Views -- ' || cte.Article_Views              AS article_views
     FROM cte
 ORDER BY cte.Article_Views DESC;
+

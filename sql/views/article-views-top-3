@@ -9,8 +9,8 @@ Description: Returns the top 3 articles by view by title
 ***********************************************************/
 CREATE VIEW article_top3 AS
 
-  SELECT a.Title  AS title,
-         av.ViewCount AS views
+  SELECT CAST(a.Title AS CHAR(40))  AS title,
+         'Views -- '|| av.ViewCount AS views
     FROM Articles a
          INNER JOIN article_views av ON av.slug = a.slug
 ORDER BY av.ViewCount DESC
