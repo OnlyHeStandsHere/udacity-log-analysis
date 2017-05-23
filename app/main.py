@@ -1,3 +1,17 @@
+##################################################################################################
+#
+#        Author: Jesse Maitland
+#          Date: 2017-05-22
+#          Type: Script / Terminal Program
+#   Description:
+#       This script connects to a Postgres database and runs some simple text reports.
+#       These reports are selected by a user, and are printed to the terminal and also saved as a txt file.
+#       The files are saved in the /reports directory
+#       Report file creation is destructive, as only a single report file type can exists for a given day
+#       This is because the date is used in creating the report file name. 
+#
+##################################################################################################
+
 #!/usr/local/bin/python3
 
 import psycopg2
@@ -78,14 +92,16 @@ def make_report(report_number):
     print_report(report_lines)
     write_file(file_name, report_lines)
 
+
 # Try connecting to the database. If we receive an exception, there is no point in continuing
 # the program as nothing further can happen.
 # Change the connection string as necessary to connect to your DB
 try:
-    connection = psycopg2.connect("dbname=news user=maitland password=password")
+    connection = psycopg2.connect("dbname=news user=user password=password")
 except psycopg2.OperationalError:
     print("Python was unable to connect to news database. The program has exited")
     exit(0)
+
 
 # for user feedback that the DB is connected!
 print("Successfully connected to news database! \n")
