@@ -40,3 +40,17 @@ to run this project clone the directory and run
 `python3 main.py`
 
 You will then be prompted in the terminal to generate your desired reports. 
+
+## CREATE VIEW SCRIPTS
+This project relies on database views These views are available in /sql/views as well as below
+
+{CREATE VIEW article_views AS
+
+  SELECT COUNT(id) AS ViewCount,
+         SPLIT_PART(path, '/', 3) AS slug  -- removes the /article/ to allow for join to slug in article
+    FROM Log
+   WHERE method = 'GET'
+         AND status = '200 OK'
+GROUP BY path
+  HAVING LENGTH(SPLIT_PART(path, '/', 3)) > 1 -- eliminates any groups that don't have a valid path}
+

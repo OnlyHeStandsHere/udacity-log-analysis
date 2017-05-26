@@ -1,18 +1,21 @@
-##################################################################################################
+#!/usr/local/bin/python3
+
+##############################################################################
 #
 #        Author: Jesse Maitland
 #          Date: 2017-05-22
 #          Type: Script / Terminal Program
 #   Description:
-#       This script connects to a Postgres database and runs some simple text reports.
-#       These reports are selected by a user, and are printed to the terminal and also saved as a txt file.
+#       This script connects to a Postgres database and
+#       runs some simple text reports.
+#       These reports are selected by a user, and are
+#       printed to the terminal and also saved as a txt file.
 #       The files are saved in the /reports directory
-#       Report file creation is destructive, as only a single report file type can exists for a given day
+#       Report file creation is destructive.
+#       Only a single report file type can exists for a given day
 #       This is because the date is used in creating the report file name.
 #
-##################################################################################################
-
-#!/usr/local/bin/python3
+##############################################################################
 
 import psycopg2
 import datetime
@@ -27,14 +30,19 @@ for dir_name in cwd:
 report_dir = report_dir + "reports/"
 
 
-# a global list of all the valid reports available and the SQL to retrieve their data sets
-report_names = {"1": ["Top_Authors", "SELECT name, article_views FROM author_rank"],
-                "2": ["Most_Viewed_Articles", "SELECT title, views FROM article_top3"],
-                "3": ["Server_Errors", "SELECT percentage_of_errors, request_date FROM high_error_dates"]}
+# a global list of all the valid reports
+# available and the SQL to retrieve their data sets
+report_names = {"1": ["Top_Authors",
+                      "SELECT name, article_views FROM author_rank"],
+                "2": ["Most_Viewed_Articles",
+                      "SELECT title, views FROM article_top3"],
+                "3": ["Server_Errors",
+                      "SELECT percentage_of_errors, request_date "
+                      "FROM high_error_dates"]}
 
 
 def get_report_header(report_name):
-    """ :return a list of str to create the report header with some simple information """
+    """ :return a list of str to create the report header """
     header = []
     date = str(datetime.datetime.now().replace(microsecond=0))
     header.append("Report Name: {}{}".format(report_name, "\n"))
@@ -43,8 +51,12 @@ def get_report_header(report_name):
 
 
 def get_file_name(report_name):
-    """ :return a string formatted as 'report_name-yyyy-mm-dd' to use as a report file name"""
-    return "{}{}{}{}".format(report_name, "-", str(datetime.datetime.now().date()), ".txt")
+    """ :return a string formatted as 'report_name-yyyy-mm-dd'
+        to use as a report file name"""
+    return "{}{}{}{}".format(report_name,
+                             "-",
+                             str(datetime.datetime.now().date()),
+                             ".txt")
 
 
 def query_db(conn, query):
@@ -55,14 +67,16 @@ def query_db(conn, query):
 
 
 def format_rows(header, data):
-    """ :return list of str formatted nicely for file writing. data param is a list of tupples. """
+    """ :return list of str formatted nicely for file writing."""
     report_lines = []
 
-    # add the lines from the header list to our report lines list. Keep these at the front of the list
+    # add the lines from the header list to our report lines list.
+    # Keep these at the front of the list
     for line in header:
         report_lines.append(line)
 
-    # each report result only has 2 columns. format those column values as a string
+    # each report result only has 2 columns.
+    # format those column values as a string
     for item in data:
         report_line = "{}{}{}".format(item[0], item[1], "\n")
         report_lines.append(report_line)
@@ -93,13 +107,15 @@ def make_report(report_number):
     write_file(file_name, report_lines)
 
 
-# Try connecting to the database. If we receive an exception, there is no point in continuing
+# Try connecting to the database.
+# If we receive an exception, there is no point in continuing
 # the program as nothing further can happen.
 # Change the connection string as necessary to connect to your DB
 try:
     connection = psycopg2.connect("dbname=news user=user password=password")
 except psycopg2.OperationalError:
-    print("Python was unable to connect to news database. The program has exited")
+    print("Python was unable to connect to news database. "
+          "The program has exited")
     exit(0)
 
 
@@ -107,8 +123,10 @@ except psycopg2.OperationalError:
 print("Successfully connected to news database! \n")
 
 
-# loop runs the program continuously until the user types exit, or a keyboard interrupt has been received.
-# It prompts the user to select a report to generate. The results are then fetched from the db, printed to the
+# loop runs the program continuously until the user types exit,
+# or a keyboard interrupt has been received.
+# It prompts the user to select a report to generate.
+# The results are then fetched from the db, printed to the
 # terminal and saved to a text file in the /reports directory.
 while True:
     selection = input("Please choose a report or type exit to quit: \n"
