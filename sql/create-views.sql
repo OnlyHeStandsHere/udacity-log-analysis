@@ -22,6 +22,16 @@ GROUP BY path
   HAVING LENGTH(SPLIT_PART(path, '/', 3)) > 1; -- eliminates any groups that don't have a valid path
 
 
+CREATE VIEW article_top3 AS
+
+  SELECT CAST(a.Title AS CHAR(40))  AS title,
+         'Views -- '|| av.ViewCount AS views
+    FROM Articles a
+         INNER JOIN article_views av ON av.slug = a.slug
+ORDER BY av.ViewCount DESC
+   LIMIT 3;
+
+
 CREATE VIEW author_rank AS
 
 WITH cte AS (
